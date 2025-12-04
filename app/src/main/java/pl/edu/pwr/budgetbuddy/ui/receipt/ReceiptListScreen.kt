@@ -1,4 +1,4 @@
-package pl.edu.pwr.budgetbuddy.ui.home
+package pl.edu.pwr.budgetbuddy.ui.receipt
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 
 @ExperimentalMaterial3Api
 @Composable
-fun HomeScreen() {
+fun ReceiptListScreen() {
     Scaffold(contentWindowInsets = WindowInsets(0.dp), topBar = {
         TopAppBar(title = {
             Row(
@@ -39,7 +39,7 @@ fun HomeScreen() {
                 .fillMaxSize()
                 .padding(it)
         ) {
-            Text(text = "Home Screen")
+            Text(text = "List Screen")
         }
     }
 }

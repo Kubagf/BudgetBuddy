@@ -14,16 +14,20 @@ import pl.edu.pwr.budgetbuddy.R
 @Composable
 fun NavBar(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
-    val items = listOf("Home", "Stats", "Add receipt", "List", "Settings")
+    val items = listOf(
+        "Home", "Stats",
+//        "Add receipt",
+        "List"
+    )
     val selectedIcons = listOf(
-        R.drawable.home_filled,
-        R.drawable.home_filled,
-        R.drawable.home_filled,
-        R.drawable.home_filled,
-        R.drawable.home_filled
+        R.drawable.home_filled, R.drawable.stats_filled,
+//        R.drawable.add_filled,
+        R.drawable.list_filled
     )
     val unselectedIcons = listOf(
-        R.drawable.home, R.drawable.home, R.drawable.home, R.drawable.home, R.drawable.home
+        R.drawable.home, R.drawable.stats,
+//        R.drawable.add,
+        R.drawable.list
     )
 
     NavigationBar {
@@ -52,5 +56,5 @@ fun NavBar(pagerState: PagerState) {
 @Preview(showBackground = true)
 @Composable
 fun NavBarPreview() {
-    NavBar(pagerState = rememberPagerState(pageCount = { 5 }))
+    NavBar(pagerState = rememberPagerState(pageCount = { 4 }))
 }
