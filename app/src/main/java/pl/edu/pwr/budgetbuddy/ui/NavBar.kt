@@ -1,3 +1,5 @@
+package pl.edu.pwr.budgetbuddy.ui
+
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
@@ -15,19 +17,13 @@ import pl.edu.pwr.budgetbuddy.R
 fun NavBar(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
     val items = listOf(
-        "Home", "Stats",
-//        "Add receipt",
-        "List"
+        "Home", "Stats", "List"
     )
     val selectedIcons = listOf(
-        R.drawable.home_filled, R.drawable.stats_filled,
-//        R.drawable.add_filled,
-        R.drawable.list_filled
+        R.drawable.home_filled, R.drawable.stats_filled, R.drawable.list_filled
     )
     val unselectedIcons = listOf(
-        R.drawable.home, R.drawable.stats,
-//        R.drawable.add,
-        R.drawable.list
+        R.drawable.home, R.drawable.stats, R.drawable.list
     )
 
     NavigationBar {
