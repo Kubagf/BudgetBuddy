@@ -9,5 +9,7 @@ class CategoryRepository(
 
     suspend fun count(): Int = categoryDao.count()
 
+    suspend fun insert(item: Category) = categoryDao.insert(item)
+
     suspend fun insertAll(items: List<Category>) = categoryDao.insertAll(items)
 }

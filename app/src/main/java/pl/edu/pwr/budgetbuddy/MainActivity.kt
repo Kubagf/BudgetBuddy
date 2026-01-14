@@ -26,16 +26,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import pl.edu.pwr.budgetbuddy.ui.BudgetViewModel
 import pl.edu.pwr.budgetbuddy.ui.NavBar
 import pl.edu.pwr.budgetbuddy.ui.home.HomeScreen
-import pl.edu.pwr.budgetbuddy.ui.receipt.NewTransactionScreen
-import pl.edu.pwr.budgetbuddy.ui.receipt.TransactionListScreen
 import pl.edu.pwr.budgetbuddy.ui.stats.StatsScreen
 import pl.edu.pwr.budgetbuddy.ui.theme.BudgetBuddyTheme
+import pl.edu.pwr.budgetbuddy.ui.transaction.EditTransactionScreen
+import pl.edu.pwr.budgetbuddy.ui.transaction.NewTransactionScreen
+import pl.edu.pwr.budgetbuddy.ui.transaction.TransactionListScreen
 
 class MainActivity : ComponentActivity() {
     @ExperimentalMaterial3Api
@@ -80,6 +83,15 @@ class MainActivity : ComponentActivity() {
                         composable("add") {
                             NewTransactionScreen(navController, viewModel)
                         }
+                        composable(
+                            route = "edit/{transactionId}",
+                            arguments = listOf(navArgument("transactionId") {
+                                type = NavType.IntType
+                            })
+                        ) { backStackEntry ->
+                            val id = backStackEntry.arguments?.getInt("transactionId") ?: -1
+                            EditTransactionScreen(navController, viewModel, id)
+                        }
                     }
                 }
             }
@@ -105,9 +117,9 @@ fun Pager(pagerState: PagerState, navController: NavController, viewModel: Budge
                 modifier = Modifier.fillMaxSize(),
             ) { page ->
                 when (page) {
-                    0 -> HomeScreen()
+                    0 -> HomeScreen(viewModel, navController)
                     1 -> StatsScreen()
-                    2 -> TransactionListScreen(viewModel)
+                    2 -> TransactionListScreen(viewModel, navController)
                 }
             }
         }

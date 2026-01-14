@@ -35,8 +35,10 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
                         Category(name = "Elektronika", type = TransactionType.EXPENSE),
                         Category(name = "Dom", type = TransactionType.EXPENSE),
                         Category(name = "Samochód", type = TransactionType.EXPENSE),
+                        Category(name = "Spożywcze", type = TransactionType.EXPENSE),
+                        Category(name = "Inne", type = TransactionType.EXPENSE),
                         Category(name = "Wypłata", type = TransactionType.INCOME),
-                        Category(name = "Freelance", type = TransactionType.INCOME),
+                        Category(name = "Inne", type = TransactionType.INCOME),
                     )
                 )
             }
@@ -59,5 +61,9 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             transactionRepo.deleteTransaction(transaction)
         }
+    }
+
+    suspend fun getTransactionById(id: Int): Transaction? {
+        return transactionRepo.getTransactionById(id)
     }
 }
