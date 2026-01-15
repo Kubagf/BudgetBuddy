@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import pl.edu.pwr.budgetbuddy.data.AppDatabase
 import pl.edu.pwr.budgetbuddy.data.Category
@@ -15,6 +17,8 @@ import pl.edu.pwr.budgetbuddy.data.TransactionType
 import pl.edu.pwr.budgetbuddy.data.TransactionWithCategory
 
 class BudgetViewModel(application: Application) : AndroidViewModel(application) {
+    private val _uiEvent = MutableSharedFlow<String>()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     private val db = AppDatabase.getDatabase(application)
 
@@ -65,5 +69,30 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
 
     suspend fun getTransactionById(id: Int): Transaction? {
         return transactionRepo.getTransactionById(id)
+    }
+
+    fun addCategory(name: String, type: TransactionType) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val newCategory = Category(name = name, type = type)
+            categoryRepo.insert(newCategory)
+        }
+    }
+
+    fun updateCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.IO) {
+            categoryRepo.update(category)
+        }
+    }
+
+    fun deleteCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val count = transactionRepo.getTransactionCountByCategory(category.id)
+            if (count > 0) {
+                _uiEvent.emit("Nie można usunąć: Kategoria ma $count transakcji!")
+            } else {
+                categoryRepo.delete(category)
+                _uiEvent.emit("Kategoria usunięta.")
+            }
+        }
     }
 }

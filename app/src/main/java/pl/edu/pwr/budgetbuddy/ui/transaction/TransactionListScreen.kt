@@ -29,7 +29,7 @@ fun TransactionListScreen(
     val transactions by viewModel.transactions.collectAsState(initial = emptyList())
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
-        topBar = { TopAppBar(title = { Text("BudgetBuddy") }) }) { padding ->
+        topBar = { TopAppBar(title = { Text("Lista transakcji") }) }) { padding ->
         if (transactions.isEmpty()) {
             Column(
                 Modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterHorizontally

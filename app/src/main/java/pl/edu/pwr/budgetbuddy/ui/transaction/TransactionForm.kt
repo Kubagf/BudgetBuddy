@@ -1,19 +1,30 @@
 package pl.edu.pwr.budgetbuddy.ui.transaction
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -24,6 +35,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -47,12 +59,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import pl.edu.pwr.budgetbuddy.data.Category
 import pl.edu.pwr.budgetbuddy.data.Transaction
 import pl.edu.pwr.budgetbuddy.data.TransactionType
 import pl.edu.pwr.budgetbuddy.ui.BudgetViewModel
+import pl.edu.pwr.budgetbuddy.utils.ImageUtils
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -66,6 +81,27 @@ fun TransactionForm(
     onSave: (Transaction) -> Unit,
     onClose: () -> Unit
 ) {
+    val context = LocalContext.current
+    var receiptPath by remember { mutableStateOf(initialTransaction?.receiptImagePath) }
+    var tempCameraUri by remember { mutableStateOf<Uri?>(null) }
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success && tempCameraUri != null) {
+            val permanentPath = ImageUtils.saveImageToInternalStorage(context, tempCameraUri!!)
+            receiptPath = permanentPath
+        }
+    }
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            val permanentPath = ImageUtils.saveImageToInternalStorage(context, uri)
+            receiptPath = permanentPath
+        }
+    }
+
+
     var titleInput by remember { mutableStateOf(initialTransaction?.title ?: "") }
     var amountInput by remember { mutableStateOf(initialTransaction?.amount?.toString() ?: "") }
     var descriptionInput by remember { mutableStateOf(initialTransaction?.description ?: "") }
@@ -178,7 +214,7 @@ fun TransactionForm(
                     categoryId = selectedCategory!!.id,
                     description = descriptionInput.trim().ifBlank { null },
                     date = calendar.time,
-                    receiptImagePath = initialTransaction?.receiptImagePath,
+                    receiptImagePath = receiptPath,
                     type = type
                 )
                 onSave(tx)
@@ -224,6 +260,64 @@ fun TransactionForm(
                             selectedCategory = null
                         }, selected = type == t
                     ) { Text(label) }
+                }
+            }
+
+            Text("Paragon / Rachunek", style = MaterialTheme.typography.bodyMedium)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Button(
+                    onClick = {
+                        val uri = ImageUtils.createTempPictureUri(context)
+                        tempCameraUri = uri
+                        cameraLauncher.launch(uri)
+                    }, modifier = Modifier.weight(1f)
+                ) {
+                    Icon(Icons.Filled.Face, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Aparat")
+                }
+
+                Button(
+                    onClick = {
+                        galleryLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }, modifier = Modifier.weight(1f)
+                ) {
+                    Icon(Icons.Filled.Menu, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Galeria")
+                }
+            }
+
+            if (receiptPath != null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = receiptPath),
+                        contentDescription = "Zdjęcie paragonu",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    IconButton(
+                        onClick = { receiptPath = null },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .background(
+                                MaterialTheme.colorScheme.surface,
+                                shape = MaterialTheme.shapes.small
+                            )
+                    ) {
+                        Icon(Icons.Filled.Close, "Usuń zdjęcie")
+                    }
                 }
             }
 

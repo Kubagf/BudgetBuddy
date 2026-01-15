@@ -11,7 +11,7 @@ fun NewTransactionScreen(
 ) {
     TransactionForm(
         viewModel = viewModel,
-        initialTransaction = null, // Brak transakcji = tryb dodawania
+        initialTransaction = null,
         onClose = { navController.navigateUp() },
         onSave = { newTransaction ->
             viewModel.addTransaction(newTransaction)

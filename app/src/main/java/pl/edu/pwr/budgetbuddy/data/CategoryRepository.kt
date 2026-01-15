@@ -12,4 +12,8 @@ class CategoryRepository(
     suspend fun insert(item: Category) = categoryDao.insert(item)
 
     suspend fun insertAll(items: List<Category>) = categoryDao.insertAll(items)
+
+    suspend fun update(item: Category) = categoryDao.update(item)
+
+    suspend fun delete(item: Category) = categoryDao.delete(item)
 }

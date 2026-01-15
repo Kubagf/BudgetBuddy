@@ -17,13 +17,16 @@ import pl.edu.pwr.budgetbuddy.R
 fun NavBar(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
     val items = listOf(
-        "Home", "Stats", "List"
+        "Start", "Statystyki", "Transakcje", "Ustawienia"
     )
     val selectedIcons = listOf(
-        R.drawable.home_filled, R.drawable.stats_filled, R.drawable.list_filled
+        R.drawable.home_filled,
+        R.drawable.stats_filled,
+        R.drawable.list_filled,
+        R.drawable.settings_filled
     )
     val unselectedIcons = listOf(
-        R.drawable.home, R.drawable.stats, R.drawable.list
+        R.drawable.home, R.drawable.stats, R.drawable.list, R.drawable.settings
     )
 
     NavigationBar {

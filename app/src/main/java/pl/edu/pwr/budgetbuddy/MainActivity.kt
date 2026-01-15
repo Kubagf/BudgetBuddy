@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import pl.edu.pwr.budgetbuddy.ui.BudgetViewModel
 import pl.edu.pwr.budgetbuddy.ui.NavBar
+import pl.edu.pwr.budgetbuddy.ui.category.CategoryManagementScreen
 import pl.edu.pwr.budgetbuddy.ui.home.HomeScreen
 import pl.edu.pwr.budgetbuddy.ui.stats.StatsScreen
 import pl.edu.pwr.budgetbuddy.ui.theme.BudgetBuddyTheme
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            val pagerState = rememberPagerState(pageCount = { 3 })
+            val pagerState = rememberPagerState(pageCount = { 4 })
 
             BudgetBuddyTheme {
                 Box(Modifier.background(MaterialTheme.colorScheme.background)) {
@@ -102,10 +103,14 @@ class MainActivity : ComponentActivity() {
 @ExperimentalMaterial3Api
 @Composable
 fun Pager(pagerState: PagerState, navController: NavController, viewModel: BudgetViewModel) {
+    val showMainFab = pagerState.currentPage != 1 && pagerState.currentPage != 3
+
     Scaffold(
         floatingActionButton = {
-        FloatingActionButton(onClick = { navController.navigate("add") }) {
-            Icon(Icons.Filled.Add, "Add new transaction")
+            if (showMainFab) {
+                FloatingActionButton(onClick = { navController.navigate("add") }) {
+                    Icon(Icons.Filled.Add, "Add new transaction")
+                }
         }
     },
         contentWindowInsets = WindowInsets(4.dp),
@@ -120,6 +125,7 @@ fun Pager(pagerState: PagerState, navController: NavController, viewModel: Budge
                     0 -> HomeScreen(viewModel, navController)
                     1 -> StatsScreen()
                     2 -> TransactionListScreen(viewModel, navController)
+                    3 -> CategoryManagementScreen(viewModel)
                 }
             }
         }

@@ -27,7 +27,7 @@ fun StatsScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "BudgetBuddy",
+                    text = "Statystyki",
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.weight(1f)
                 )

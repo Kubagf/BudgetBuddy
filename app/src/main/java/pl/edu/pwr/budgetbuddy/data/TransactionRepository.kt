@@ -32,4 +32,8 @@ class TransactionRepository(
     suspend fun deleteTransaction(transaction: Transaction) {
         transactionDao.delete(transaction)
     }
+    
+    suspend fun getTransactionCountByCategory(categoryId: Int): Int {
+        return transactionDao.getCountByCategoryId(categoryId)
+    }
 }
