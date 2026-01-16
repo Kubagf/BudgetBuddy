@@ -12,8 +12,14 @@ import androidx.room.Transaction as RoomTransaction
 @Dao
 interface TransactionDao {
 
+    @Query("SELECT COUNT(*) FROM transactions")
+    suspend fun count(): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(transaction: Transaction)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(transactions: List<Transaction>)
 
     @RoomTransaction
     @Query("SELECT * FROM transactions ORDER BY date DESC")

@@ -5,6 +5,10 @@ import kotlinx.coroutines.flow.Flow
 class TransactionRepository(
     private val transactionDao: TransactionDao
 ) {
+    suspend fun getCount(): Int {
+        return transactionDao.count()
+    }
+
     fun getAllTransactions(): Flow<List<TransactionWithCategory>> {
         return transactionDao.getAllTransactions()
     }
@@ -25,6 +29,10 @@ class TransactionRepository(
         transactionDao.insert(transaction)
     }
 
+    suspend fun insertAllTransactions(transactions: List<Transaction>) {
+        transactionDao.insertAll(transactions)
+    }
+
     suspend fun updateTransaction(transaction: Transaction) {
         transactionDao.update(transaction)
     }
@@ -32,7 +40,7 @@ class TransactionRepository(
     suspend fun deleteTransaction(transaction: Transaction) {
         transactionDao.delete(transaction)
     }
-    
+
     suspend fun getTransactionCountByCategory(categoryId: Int): Int {
         return transactionDao.getCountByCategoryId(categoryId)
     }

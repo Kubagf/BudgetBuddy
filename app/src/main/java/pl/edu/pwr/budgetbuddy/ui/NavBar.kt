@@ -17,7 +17,7 @@ import pl.edu.pwr.budgetbuddy.R
 fun NavBar(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
     val items = listOf(
-        "Start", "Statystyki", "Transakcje", "Ustawienia"
+        "Start", "Statystyki", "Transakcje", "Kategorie"
     )
     val selectedIcons = listOf(
         R.drawable.home_filled,

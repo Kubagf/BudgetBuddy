@@ -15,6 +15,7 @@ import pl.edu.pwr.budgetbuddy.data.Transaction
 import pl.edu.pwr.budgetbuddy.data.TransactionRepository
 import pl.edu.pwr.budgetbuddy.data.TransactionType
 import pl.edu.pwr.budgetbuddy.data.TransactionWithCategory
+import java.util.Date
 
 class BudgetViewModel(application: Application) : AndroidViewModel(application) {
     private val _uiEvent = MutableSharedFlow<String>()
@@ -43,6 +44,53 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
                         Category(name = "Inne", type = TransactionType.EXPENSE),
                         Category(name = "Wypłata", type = TransactionType.INCOME),
                         Category(name = "Inne", type = TransactionType.INCOME),
+                    )
+                )
+            }
+
+            if (transactionRepo.getCount() == 0) {
+                val now = Date()
+                val yesterday = Date(now.time - 24 * 60 * 60 * 1000)
+                val twoDaysAgo = Date(now.time - 48 * 60 * 60 * 1000)
+
+                transactionRepo.insertAllTransactions(
+                    listOf(
+                        Transaction(
+                            title = "Zakupy w Biedronce",
+                            amount = 156.50,
+                            categoryId = 4,
+                            description = "Tygodniowe zakupy spożywcze",
+                            date = now,
+                            type = TransactionType.EXPENSE
+                        ), Transaction(
+                            title = "Paliwo",
+                            amount = 250.00,
+                            categoryId = 3,
+                            description = "Orlen - pełny bak",
+                            date = now,
+                            type = TransactionType.EXPENSE
+                        ), Transaction(
+                            title = "Kino",
+                            amount = 80.00,
+                            categoryId = 5,
+                            description = "Wyjście na Diunę",
+                            date = yesterday,
+                            type = TransactionType.EXPENSE
+                        ), Transaction(
+                            title = "Wypłata",
+                            amount = 5500.00,
+                            categoryId = 6,
+                            description = "Wynagrodzenie za styczeń",
+                            date = twoDaysAgo,
+                            type = TransactionType.INCOME
+                        ), Transaction(
+                            title = "Myszka komputerowa",
+                            amount = 120.00,
+                            categoryId = 1,
+                            description = "Logitech",
+                            date = twoDaysAgo,
+                            type = TransactionType.EXPENSE
+                        )
                     )
                 )
             }

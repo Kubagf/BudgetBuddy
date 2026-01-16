@@ -123,7 +123,7 @@ fun Pager(pagerState: PagerState, navController: NavController, viewModel: Budge
             ) { page ->
                 when (page) {
                     0 -> HomeScreen(viewModel, navController)
-                    1 -> StatsScreen()
+                    1 -> StatsScreen(viewModel)
                     2 -> TransactionListScreen(viewModel, navController)
                     3 -> CategoryManagementScreen(viewModel)
                 }

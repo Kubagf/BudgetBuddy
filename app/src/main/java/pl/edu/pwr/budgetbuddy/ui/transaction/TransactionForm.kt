@@ -23,8 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -60,9 +58,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import pl.edu.pwr.budgetbuddy.R
 import pl.edu.pwr.budgetbuddy.data.Category
 import pl.edu.pwr.budgetbuddy.data.Transaction
 import pl.edu.pwr.budgetbuddy.data.TransactionType
@@ -263,34 +263,36 @@ fun TransactionForm(
                 }
             }
 
-            Text("Paragon / Rachunek", style = MaterialTheme.typography.bodyMedium)
+            Text("Rachunek", style = MaterialTheme.typography.bodyMedium)
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Button(
-                    onClick = {
-                        val uri = ImageUtils.createTempPictureUri(context)
-                        tempCameraUri = uri
-                        cameraLauncher.launch(uri)
-                    }, modifier = Modifier.weight(1f)
+            if (receiptPath == null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Icon(Icons.Filled.Face, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Aparat")
-                }
+                    Button(
+                        onClick = {
+                            val uri = ImageUtils.createTempPictureUri(context)
+                            tempCameraUri = uri
+                            cameraLauncher.launch(uri)
+                        }, modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(painterResource(id = R.drawable.camera), contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Aparat")
+                    }
 
-                Button(
-                    onClick = {
-                        galleryLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    }, modifier = Modifier.weight(1f)
-                ) {
-                    Icon(Icons.Filled.Menu, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Galeria")
+                    Button(
+                        onClick = {
+                            galleryLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        }, modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(painterResource(id = R.drawable.gallery), contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Galeria")
+                    }
                 }
             }
 
@@ -344,7 +346,6 @@ fun TransactionForm(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // DATA
                 Box(
                     modifier = Modifier
                         .weight(1f)
